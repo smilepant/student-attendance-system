@@ -1,6 +1,6 @@
 <?php
 // Include database connection file
-include '../db_connect.php';
+include '../../db_connect.php';
 
 // Initialize variables
 $message = '';
@@ -26,7 +26,7 @@ if (!$filter_semester || !$course_id) {
     $stmt_course_name->close();
 
     // Fetch attendance records for the selected course ID
-    $sql_attendance = "SELECT Students.first_name, Students.last_name, Attendance.attendance_date, Attendance.status
+    $sql_attendance = "SELECT Students.first_name, Students.student_id, Students.last_name, Attendance.attendance_date, Attendance.status
                         FROM Attendance
                         JOIN Students ON Attendance.student_id = Students.student_id
                         WHERE Attendance.course_id = ?
@@ -63,27 +63,48 @@ if (!$filter_semester || !$course_id) {
 
 <body class="container">
     <h2>Check Student Attendance</h2>
-    <?php include './components/navbar.php'; ?>
+    <?php include '../components/navbar.php'; ?>
 
     <?php if (!empty($attendance)) : ?>
         <h3>Attendance Records for <?php echo $course_name; ?></h3>
+        <a class="btn" href="generate_csv.php?course_id=<?= $course_id ?>&sem_id=<?= $filter_semester ?>">
+            Export to CSV
+        </a>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
+                        <th>S.N</th>
                         <th>Date</th>
                         <?php $unique_students = array_unique(array_map(function ($record) {
                             return $record['first_name'] . ' ' . $record['last_name'];
                         }, $attendance)); ?>
                         <?php foreach ($unique_students as $student) : ?>
-                            <th><?= htmlspecialchars($student) ?></th>
+                            <?php
+                            $student_id = '';
+                            foreach ($attendance as $record) {
+                                if ($record['first_name'] . ' ' . $record['last_name'] == $student) {
+                                    $student_id = $record['student_id'];
+                                    break;
+                                }
+                            }
+                            ?>
+                            <th>
+                                <a href="student_attendance.php?student_id=<?= $student_id ?>&course_id=<?= $course_id ?>">
+                                    <?= htmlspecialchars($student) ?>
+                                </a>
+                            </th>
                         <?php endforeach; ?>
+
                     </tr>
                 </thead>
                 <tbody>
+
                     <?php $dates = array_unique(array_column($attendance, 'attendance_date')); ?>
+                    <?php $sn = 1 ?>
                     <?php foreach ($dates as $date) : ?>
                         <tr>
+                            <td><?= $sn++; ?></td>
                             <td><?= $date ?></td>
                             <?php foreach ($unique_students as $student) : ?>
                                 <?php $status = ''; ?>
@@ -96,6 +117,23 @@ if (!$filter_semester || !$course_id) {
                             <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>
+                    <tr>
+                        <td>Total Days: <?= $sn - 1 ?></td>
+                        <td>Total Attendance</td>
+                        <?php
+                        // Initialize array to hold total attendance count for each student
+                        $total_attendance = array_fill_keys($unique_students, 0);
+                        foreach ($attendance as $record) {
+                            if ($record['status'] == 'Present') {
+                                $student_name = $record['first_name'] . ' ' . $record['last_name'];
+                                $total_attendance[$student_name]++;
+                            }
+                        }
+                        ?>
+                        <?php foreach ($unique_students as $student) : ?>
+                            <td><?= $total_attendance[$student] ?></td>
+                        <?php endforeach; ?>
+                    </tr>
                 </tbody>
             </table>
         </div>

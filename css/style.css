@@ -25,7 +25,15 @@ form label {
   display: block;
   margin: 10px 0 5px;
 }
-
+.btn {
+  min-width: 100px;
+  height: 20px;
+  padding: 8px;
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 5px;
+}
 form input,
 form select {
   width: 100%;

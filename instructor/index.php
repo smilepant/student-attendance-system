@@ -50,8 +50,8 @@ $courses = $result->fetch_all(MYSQLI_ASSOC);
                         <td><?php echo htmlspecialchars($course['course_name']); ?></td>
                         <td><?php echo htmlspecialchars($course['semester_name']); ?></td>
                         <td>
-                            <a href="mark_attendance.php?course_id=<?php echo $course['course_id']; ?>">Mark Attendance</a> |
-                            <a href="see_attendance.php?sem_id=<?php echo $course['semester_id']; ?>&course_id=<?php echo $course['course_id']; ?>">See Attendance</a>
+                            <a href="./manage_student/mark_attendance.php?course_id=<?php echo $course['course_id']; ?>">Mark Attendance</a> |
+                            <a href="./manage_student/see_attendance.php?sem_id=<?php echo $course['semester_id']; ?>&course_id=<?php echo $course['course_id']; ?>">See Attendance</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

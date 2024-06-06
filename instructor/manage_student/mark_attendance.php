@@ -1,5 +1,5 @@
 <?php
-include '../db_connect.php';
+include '../../db_connect.php';
 session_start();
 
 // Redirect if user is not logged in as an instructor
@@ -99,7 +99,7 @@ $today = date("Y-m-d");
 <body>
     <div class="container">
         <h1>Mark Attendance</h1>
-        <?php include './components/navbar.php'; ?> 
+        <?php include '../components/navbar.php'; ?> 
 
         <!-- Display Course and Instructor Information -->
         <h2>Course: <?= $course_name ?></h2>
