@@ -71,20 +71,9 @@ sort($dates); // Sort dates to ensure chronological order
     <title>Check Student Attendance</title>
     <link rel="stylesheet" href="./css/style.css">
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        th {
-            background-color: #f2f2f2;
+        .last-col {
+            background-color: #f1f3f5 !important ;
+        
         }
     </style>
 </head>
@@ -108,15 +97,14 @@ sort($dates); // Sort dates to ensure chronological order
         <h3>Attendance Records for <?= htmlspecialchars($attendance[0]['first_name']) ?> <?= htmlspecialchars($attendance[0]['last_name']) ?></h3>
         <div style="overflow-x: auto;" >
             <table >
-                <thead>
+         
+                    <tbody>
                     <tr>
                         <th>Date</th>
                         <?php foreach ($courses as $course) : ?>
                             <th><?= htmlspecialchars($course['course_name']) ?></th>
                         <?php endforeach; ?>
                     </tr>
-                </thead>
-                <tbody>
                     <?php foreach ($dates as $date) : ?>
                         <tr>
                             <td><?= $date ?></td>
@@ -138,7 +126,7 @@ sort($dates); // Sort dates to ensure chronological order
                         </tr>
                     <?php endforeach; ?>
                     <tr>
-                        <td>Total Present Days</td>
+                        <td  class="last-col">Total Present Days</td>
                         <?php foreach ($courses as $course) : ?>
                             <?php 
                                 $total_present = 0;
@@ -148,7 +136,7 @@ sort($dates); // Sort dates to ensure chronological order
                                         $total_present++;
                                     }
                                 }
-                                echo '<td>' . $total_present . '</td>';
+                                echo '<td class="last-col">' . $total_present . '</td>';
                             ?>
                         <?php endforeach; ?>
                     </tr>
