@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['course_id'])) {
     $course_id = $_GET['course_id'];
 
     // Fetch course information
-    $sql_course = "SELECT course_name FROM Courses WHERE course_id = ?";
+    $sql_course = "SELECT course_name, semester FROM Courses WHERE course_id = ?";
     $stmt_course = $conn->prepare($sql_course);
     if (!$stmt_course) {
         die("Prepare failed: " . $conn->error);
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['course_id'])) {
 
     $course_info = $result_course->fetch_assoc();
     $course_name = $course_info['course_name'];
-
+    $course_semester = $course_info['semester'];
     // Fetch instructor's name
     $sql_instructor = "SELECT first_name, last_name FROM Instructors WHERE instructor_id = ?";
     $stmt_instructor = $conn->prepare($sql_instructor);
@@ -54,10 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['course_id'])) {
     $instructor_name = $instructor_info['first_name'] . " " . $instructor_info['last_name'];
 
     // Fetch students enrolled in the selected course
-    $sql_students = "SELECT Students.student_id, Students.first_name, Students.last_name 
-    FROM Students 
-    INNER JOIN Enrollments ON Students.student_id = Enrollments.student_id
-    WHERE Enrollments.course_id = ?
+    $sql_students = "SELECT Students.student_id, Students.first_name, Students.last_name, Students.semester  
+    FROM Students
+    WHERE semester = ?
     ORDER BY Students.first_name";
 
     $stmt_students = $conn->prepare($sql_students);
@@ -65,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['course_id'])) {
         die("Prepare failed: " . $conn->error);
     }
 
-    $stmt_students->bind_param("i", $course_id);
+    $stmt_students->bind_param("i", $course_semester);
     if (!$stmt_students->execute()) {
         die("Execute failed: " . $stmt_students->error);
     }
@@ -99,7 +98,7 @@ $today = date("Y-m-d");
 <body>
     <div class="container">
         <h1>Mark Attendance</h1>
-        <?php include '../components/navbar.php'; ?> 
+        <?php include '../components/navbar.php'; ?>
 
         <!-- Display Course and Instructor Information -->
         <h2>Course: <?= $course_name ?></h2>
@@ -108,6 +107,7 @@ $today = date("Y-m-d");
         <form method="post" action="submit_attendance.php">
             <input type="hidden" name="course_id" value="<?= $course_id ?>">
             <input type="hidden" name="attendance_date" value="<?= $today ?>">
+            <input type="hidden" name="semester" value="<?= $course_semester ?>">
             <table id="studentsTable">
                 <thead>
                     <tr>
@@ -118,19 +118,21 @@ $today = date("Y-m-d");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $num = 1; foreach ($students as $student) : ?>
+                    <?php $num = 1;
+                    foreach ($students as $student) : ?>
                         <tr>
                             <td><?= $num ?></td>
                             <td><?= $student['student_id'] ?></td>
                             <td><?= $student['first_name'] . " " .  $student['last_name'] ?></td>
 
-                            <td><input type="checkbox" name="present[]" value="<?= $student['student_id'] ?>"></td>
+                            <td><input checked type="checkbox" name="present[]" value="<?= $student['student_id'] ?>"></td>
                         </tr>
-                    <?php $num++; endforeach; ?>
+                    <?php $num++;
+                    endforeach; ?>
                 </tbody>
             </table>
-            <input type="submit" value="Submit Attendance"/>
-            <p><?= $_GET['success'] ?></p>
+            <input type="submit" value="Submit Attendance" />
+            <p><?= $_GET['success']  ?></p>
         </form>
     </div>
 </body>

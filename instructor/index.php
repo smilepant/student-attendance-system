@@ -10,10 +10,9 @@ if (!isset($_SESSION['instructor_id'])) {
 $instructor_id = $_SESSION['instructor_id'];
 
 // Update the SQL query to include semester_id
-$sql = "SELECT Courses.course_id, Courses.course_name, Courses.semester_id, Semesters.semester_name
+$sql = "SELECT Courses.course_id, Courses.course_name, Courses.semester
         FROM Courses
         INNER JOIN Course_Instructors ON Courses.course_id = Course_Instructors.course_id
-        INNER JOIN Semesters ON Courses.semester_id = Semesters.semester_id
         WHERE Course_Instructors.instructor_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $instructor_id);
@@ -48,10 +47,10 @@ $courses = $result->fetch_all(MYSQLI_ASSOC);
                 <?php foreach ($courses as $course) : ?>
                     <tr>
                         <td><?php echo htmlspecialchars($course['course_name']); ?></td>
-                        <td><?php echo htmlspecialchars($course['semester_name']); ?></td>
+                        <td><?php echo htmlspecialchars($course['semester']); ?></td>
                         <td>
                             <a href="./manage_student/mark_attendance.php?course_id=<?php echo $course['course_id']; ?>">Mark Attendance</a> |
-                            <a href="./manage_student/see_attendance.php?sem_id=<?php echo $course['semester_id']; ?>&course_id=<?php echo $course['course_id']; ?>">See Attendance</a>
+                            <a href="./manage_student/see_attendance.php?sem_id=<?php echo $course['semester']; ?>&course_id=<?php echo $course['course_id']; ?>">See Attendance</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

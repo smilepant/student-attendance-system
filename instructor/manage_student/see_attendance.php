@@ -1,6 +1,11 @@
 <?php
 // Include database connection file
 include '../../db_connect.php';
+session_start();
+if (!isset($_SESSION['instructor_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
 
 // Initialize variables
 $message = '';
@@ -66,8 +71,8 @@ if (!$filter_semester || !$course_id) {
     <?php include '../components/navbar.php'; ?>
 
     <?php if (!empty($attendance)) : ?>
-        <h3>Attendance Records for <?php echo $course_name; ?></h3>
-        <a class="btn" href="generate_csv.php?course_id=<?= $course_id ?>&sem_id=<?= $filter_semester ?>">
+        <h3>Attendance Records for <?php echo $course_name; ?> of semester  <?php echo $filter_semester; ?></h3>
+        <a class="btn" href="generate_csv.php?course_id=<?= $course_id ?>&sem=<?= $filter_semester ?>">
             Export to CSV
         </a>
         <div style="overflow-x: auto;">
@@ -90,7 +95,7 @@ if (!$filter_semester || !$course_id) {
                             }
                             ?>
                             <th>
-                                <a href="student_attendance.php?student_id=<?= $student_id ?>&course_id=<?= $course_id ?>">
+                                <a style="color: white;" href="student_attendance.php?student_id=<?= $student_id ?>&course_id=<?= $course_id ?>">
                                     <?= htmlspecialchars($student) ?>
                                 </a>
                             </th>
@@ -113,7 +118,7 @@ if (!$filter_semester || !$course_id) {
                                         <?php $status = htmlspecialchars($record['status']); ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
-                                <td><?= $status ?></td>
+                                <td><?= $status ? $status : "-" ?></td>
                             <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>

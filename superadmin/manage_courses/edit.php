@@ -9,25 +9,15 @@ if (!isset($_SESSION['superadmin_logged_in'])) {
 
 $message = '';
 
-// Fetch semesters
-$sql_semesters = "SELECT * FROM Semesters";
-$result_semesters = $conn->query($sql_semesters);
-if ($result_semesters === false) {
-    die("Error fetching semesters: " . $conn->error);
-}
-$semesters = $result_semesters->fetch_all(MYSQLI_ASSOC);
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_course'])) {
     $course_id = $_POST['course_id'];
     $course_name = $_POST['course_name'];
     $course_description = $_POST['course_description'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
     $semester_id = $_POST['semester_id'];
 
-    $sql = "UPDATE Courses SET course_name=?, course_description=?, start_date=?, end_date=?, semester_id=? WHERE course_id=?";
+    $sql = "UPDATE Courses SET course_name=?, course_description=?, semester=? WHERE course_id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssii", $course_name, $course_description, $start_date, $end_date, $semester_id, $course_id);
+    $stmt->bind_param("ssii", $course_name, $course_description, $semester_id, $course_id);
 
     if ($stmt->execute()) {
         $message = "Course updated successfully!";
@@ -61,7 +51,7 @@ if (isset($_GET['course_id'])) {
 <body>
     <div class="container">
         <h2>Edit Course</h2>
-        <?php include '../components/navbar.php'; ?> 
+        <?php include '../components/navbar.php'; ?>
         <form method="post">
             <input type="hidden" name="edit_course" value="true">
             <input type="hidden" name="course_id" value="<?php echo $course['course_id']; ?>">
@@ -69,15 +59,16 @@ if (isset($_GET['course_id'])) {
             <input type="text" name="course_name" value="<?php echo $course['course_name']; ?>" required><br>
             <label for="course_description">Course Description:</label>
             <textarea name="course_description" required><?php echo $course['course_description']; ?></textarea><br>
-            <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date" value="<?php echo $course['start_date']; ?>" required><br>
-            <label for="end_date">End Date:</label>
-            <input type="date" name="end_date" value="<?php echo $course['end_date']; ?>" required><br>
             <label for="semester">Semester:</label>
             <select name="semester_id" required>
-                <?php foreach ($semesters as $semester) : ?>
-                    <option value="<?php echo $semester['semester_id']; ?>" <?php if ($semester['semester_id'] == $course['semester_id']) echo "selected"; ?>><?php echo $semester['semester_name']; ?></option>
-                <?php endforeach; ?>
+                <option value="1">First Semester</option>
+                <option value="2">Second Semester</option>
+                <option value="3">Third Semester</option>
+                <option value="4">Forth Semester</option>
+                <option value="5">Fifth Semester</option>
+                <option value="6">Sixth Semester</option>
+                <option value="7">Seventh Semester</option>
+                <option value="8">Eight Semester</option>
             </select><br>
             <input type="submit" value="Update Course">
         </form>

@@ -7,22 +7,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the necessary data is provided
     if (isset($_POST['course_id']) && isset($_POST['attendance_date'])) {
         $course_id = $_POST['course_id'];
+        $semester = $_POST['semester'];
         $attendance_date = $_POST['attendance_date'];
         $present_students = isset($_POST['present']) ? $_POST['present'] : [];
-
+        // echo $course_id. " " . $attendance_date . " ". $present_students;
         // Prepare the SQL statement to fetch all students enrolled in the given course
         $sql_fetch_students = "
-            SELECT s.student_id 
-            FROM Students s
-            INNER JOIN Enrollments e ON s.student_id = e.student_id
-            WHERE e.course_id = ?";
+            SELECT student_id, semester
+            FROM Students
+            WHERE semester = ?";
         $stmt_fetch_students = $conn->prepare($sql_fetch_students);
         if (!$stmt_fetch_students) {
             die("Prepare failed: " . $conn->error);
         }
 
         // Bind the course_id parameter and execute the statement
-        $stmt_fetch_students->bind_param("i", $course_id);
+        $stmt_fetch_students->bind_param("i", $semester);
         if (!$stmt_fetch_students->execute()) {
             die("Execute failed: " . $stmt_fetch_students->error);
         }
@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Bind parameters
         $stmt_insert_attendance->bind_param("iiss", $student_id, $course_id, $attendance_date, $status);
+  
 
         // Iterate through all students and set their attendance status
         foreach ($all_students as $student) {
@@ -54,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 die("Execute failed: " . $stmt_insert_attendance->error);
             }
         }
-
         // Close the statement
         $stmt_insert_attendance->close();
 

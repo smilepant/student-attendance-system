@@ -9,26 +9,17 @@ $filter_semester = '';
 $filter_email = '';
 $courses = [];
 
-// Fetch semesters
-$sql_semesters = "SELECT semester_id, semester_name FROM Semesters";
-$result_semesters = $conn->query($sql_semesters);
 
-// Check if semesters fetched successfully
-if (!$result_semesters) {
-    die("Error fetching semesters: " . $conn->error);
-}
 
-// Store semesters in an associative array
-$semesters = $result_semesters->fetch_all(MYSQLI_ASSOC);
 
 // Check if form submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get selected semester and student email from form
-    $filter_semester = $_POST['semester_id'];
+    $filter_semester = $_POST['semester'];
     $filter_email = $_POST['student_email'];
 
     // Fetch courses for the selected semester
-    $sql_courses = "SELECT course_id, course_name FROM Courses WHERE semester_id = ?";
+    $sql_courses = "SELECT course_id, course_name FROM Courses WHERE semester = ?";
     $stmt_courses = $conn->prepare($sql_courses);
     $stmt_courses->bind_param("i", $filter_semester);
     $stmt_courses->execute();
@@ -41,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         FROM Students
                         JOIN Attendance ON Students.student_id = Attendance.student_id
                         JOIN Courses ON Attendance.course_id = Courses.course_id
-                        WHERE Courses.semester_id = ? AND Students.email = ?
+                        WHERE Courses.semester= ? AND Students.email = ?
                         ORDER BY Attendance.attendance_date ASC";
 
     $stmt_attendance = $conn->prepare($sql_attendance);
@@ -81,12 +72,16 @@ sort($dates); // Sort dates to ensure chronological order
     <h2>Check Student Attendance</h2>
     <form method="post">
         <label for="semester_id">Select Semester:</label>
-        <select name="semester_id" required>
-            <?php foreach ($semesters as $semester) : ?>
-                <option value="<?= $semester['semester_id'] ?>" <?= ($filter_semester == $semester['semester_id']) ? 'selected' : '' ?>>
-                    <?= $semester['semester_name'] ?>
-                </option>
-            <?php endforeach; ?>
+        <select name="semester" required>
+                <option value="1">First Semester</option>
+                <option value="2">Second Semester</option>
+                <option value="3">Third Semester</option>
+                <option value="4">Fourth Semester</option>
+                <option value="5">Fifth Semester</option>
+                <option value="6">Sixth Semester</option>
+                <option value="7">Seventh Semester</option>
+                <option value="8">Eighth Semester</option>
+       
         </select><br><br>
         <label for="student_email">Enter Student Email:</label>
         <input type="email" name="student_email" required value="<?= htmlspecialchars($filter_email) ?>"><br><br>
@@ -94,7 +89,7 @@ sort($dates); // Sort dates to ensure chronological order
     </form>
 
     <?php if (!empty($attendance)) : ?>
-        <h3>Attendance Records for <?= htmlspecialchars($attendance[0]['first_name']) ?> <?= htmlspecialchars($attendance[0]['last_name']) ?></h3>
+        <h3>Attendance Records for <?= htmlspecialchars($attendance[0]['first_name']) ?> <?= htmlspecialchars($attendance[0]['last_name']) ?> of Semester: <?= htmlspecialchars($filter_semester) ?></h3>
         <div style="overflow-x: auto;" >
             <table >
          

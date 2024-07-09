@@ -12,12 +12,10 @@ $message = '';
 // Handle Add Semester Form Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] === 'add') {
     $semester_name = $_POST['semester_name'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
 
-    $sql = "INSERT INTO Semesters (semester_name, start_date, end_date) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO Semesters (semester_name) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sss", $semester_name, $start_date, $end_date);
+    $stmt->bind_param("s", $semester_name);
 
     if ($stmt->execute()) {
         $message = "Semester added successfully!";
@@ -49,10 +47,6 @@ $semesters = $result->fetch_all(MYSQLI_ASSOC);
             <input type="hidden" name="action" value="add">
             <label for="semester_name">Semester Name:</label>
             <input type="text" name="semester_name" required><br>
-            <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date" required><br>
-            <label for="end_date">End Date:</label>
-            <input type="date" name="end_date" required><br>
             <input type="submit" value="Add Semester">
         </form>
 
@@ -62,19 +56,15 @@ $semesters = $result->fetch_all(MYSQLI_ASSOC);
             <tr>
                 <th>ID</th>
                 <th>Semester Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
                 <th>Actions</th>
             </tr>
             <?php foreach ($semesters as $semester): ?>
                 <tr>
                     <td><?php echo htmlspecialchars($semester['semester_id']); ?></td>
                     <td><?php echo htmlspecialchars($semester['semester_name']); ?></td>
-                    <td><?php echo htmlspecialchars($semester['start_date']); ?></td>
-                    <td><?php echo htmlspecialchars($semester['end_date']); ?></td>
                     <td>
                         <a href="edit.php?id=<?php echo $semester['semester_id']; ?>">Edit</a>
-                        <a href="delete.php?id=<?php echo $semester['semester_id']; ?>">Delete</a>
+                        <!-- <a href="delete.php?id=<?php echo $semester['semester_id']; ?>">Delete</a> -->
                     </td>
                 </tr>
             <?php endforeach; ?>

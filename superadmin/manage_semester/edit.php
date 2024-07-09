@@ -28,12 +28,10 @@ if (isset($_GET['id'])) {
 // Handle Edit Semester Form Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] === 'edit') {
     $semester_name = $_POST['semester_name'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
 
-    $sql = "UPDATE Semesters SET semester_name = ?, start_date = ?, end_date = ? WHERE semester_id = ?";
+    $sql = "UPDATE Semesters SET semester_name = ? WHERE semester_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssi", $semester_name, $start_date, $end_date, $semester_id);
+    $stmt->bind_param("si", $semester_name, $semester_id);
 
     if ($stmt->execute()) {
         $message = "Semester updated successfully!";
@@ -61,11 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
                 <input type="hidden" name="action" value="edit">
                 <label for="semester_name">Semester Name:</label>
                 <input type="text" name="semester_name" value="<?php echo htmlspecialchars($semester['semester_name']); ?>" required><br>
-                <label for="start_date">Start Date:</label>
-                <input type="date" name="start_date" value="<?php echo htmlspecialchars($semester['start_date']); ?>" required><br>
-                <label for="end_date">End Date:</label>
-                <input type="date" name="end_date" value="<?php echo htmlspecialchars($semester['end_date']); ?>" required><br>
-                <input type="submit" value="Update Semester">
+                 <input type="submit" value="Update Semester">
             </form>
         <?php else : ?>
             <p><?php echo $message; ?></p>
