@@ -112,6 +112,8 @@ $students = $result->fetch_all(MYSQLI_ASSOC);
                 <option value="6" <?php echo ($filter_semester == '6') ? 'selected' : ''; ?>>Sixth Semester</option>
                 <option value="7" <?php echo ($filter_semester == '7') ? 'selected' : ''; ?>>Seventh Semester</option>
                 <option value="8" <?php echo ($filter_semester == '8') ? 'selected' : ''; ?>>Eighth Semester</option>
+                <option value="20">Passed Out</option>
+                <option value="30">Dropped Out</option>
             </select>
             <br><br>
             <input type="submit" name="filter" value="Filter Students">
@@ -141,6 +143,8 @@ $students = $result->fetch_all(MYSQLI_ASSOC);
                 <option value="6">Sixth Semester</option>
                 <option value="7">Seventh Semester</option>
                 <option value="8">Eighth Semester</option>
+                <option value="20">Passed Out</option>
+                <option value="30">Dropped Out</option>
             </select>
             <br><br>
             <input type="submit" name="bulk_update" value="Update Selected Students">
@@ -161,6 +165,8 @@ $students = $result->fetch_all(MYSQLI_ASSOC);
                 <option value="6">Sixth Semester</option>
                 <option value="7">Seventh Semester</option>
                 <option value="8">Eighth Semester</option>
+                <option value="20">Passed Out</option>
+                <option value="30">Dropped Out</option>
             </select>
             <br>
             <label>New Semester:</label>
@@ -173,6 +179,8 @@ $students = $result->fetch_all(MYSQLI_ASSOC);
                 <option value="6">Sixth Semester</option>
                 <option value="7">Seventh Semester</option>
                 <option value="8">Eighth Semester</option>
+                <option value="20">Passed Out</option>
+                <option value="30">Dropped Out</option>
             </select>
             <br><br>
             <input type="submit" name="semester_update" value="Update Semester">
