@@ -111,3 +111,4 @@ fputcsv($output, $totalDaysRow);
 fclose($output);
 exit;
 ?>
+

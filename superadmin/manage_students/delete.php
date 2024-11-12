@@ -22,6 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $stmt->close();
 }
 
-header("Location: ./"); // Assuming index.php is your main page
+header("Location: ./"); 
 exit;
 ?>

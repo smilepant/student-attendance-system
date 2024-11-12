@@ -1,22 +1,17 @@
 <?php
-// Include database connection file
 include '../../db_connect.php';
 
-// Start session
 session_start();
 
-// Check if superadmin is logged in, otherwise redirect to login page
 if (!isset($_SESSION['superadmin_logged_in'])) {
     header("Location: ../login.php");
     exit;
 }
 
-// Initialize message variable
 $message = '';
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data and sanitize
     $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
     $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);

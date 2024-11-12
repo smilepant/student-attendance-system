@@ -9,7 +9,6 @@ if (!isset($_SESSION['superadmin_logged_in'])) {
 
 $message = '';
 
-// Handle form submission for updating semesters
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['bulk_update'])) {
         // Update selected students to a new semester
