@@ -1,4 +1,5 @@
 <div class="navbar">
+    <a href="/superadmin/">Dashboard</a>
     <a href="/superadmin/manage_teachers">Manage Teachers</a>
     <a href="/superadmin/manage_students">Manage Students</a>
     <a href="/superadmin/manage_courses">Manage Courses</a>
